@@ -14,5 +14,8 @@ public class Main {
 		myFrame.addMouseListener(myMouseAdapter);
 
 		myFrame.setVisible(true);
+		
+		BombSetter bombSetter = new BombSetter();
+		String[][] bombGrid = bombSetter.setBombs();
 	}
 }
