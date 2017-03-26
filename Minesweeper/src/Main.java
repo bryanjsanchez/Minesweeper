@@ -2,20 +2,19 @@ import javax.swing.JFrame;
 
 public class Main {
 	public static void main(String[] args) {
-		JFrame myFrame = new JFrame("Color Grid");
-		myFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		myFrame.setLocation(400, 150);
-		myFrame.setSize(325, 345);
+		
+		//TODO: on click, start new game
 
-		MyPanel myPanel = new MyPanel();
-		myFrame.add(myPanel);
-
-		MyMouseAdapter myMouseAdapter = new MyMouseAdapter();
-		myFrame.addMouseListener(myMouseAdapter);
-
-		myFrame.setVisible(true);
+		NewGame currentGame = new NewGame();
+		JFrame myFrame = currentGame.clearGrid();
 		
 		BombSetter bombSetter = new BombSetter();
 		String[][] bombGrid = bombSetter.setBombs();
+		
+		MyMouseAdapter myMouseAdapter = new MyMouseAdapter(bombGrid);
+		myFrame.addMouseListener(myMouseAdapter);
+		
+		
+		
 	}
 }
