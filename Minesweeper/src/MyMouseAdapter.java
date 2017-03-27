@@ -164,6 +164,15 @@ public class MyMouseAdapter extends MouseAdapter {
 						//On the grid other than on the left column and on the top row:
 						
 						revealSquare(myPanel, myPanel.mouseDownGridX, myPanel.mouseDownGridY, bombGrid);
+						if (bombGrid[myPanel.mouseDownGridX][myPanel.mouseDownGridY] == "b") {
+							for (int i = 0; i < 9; i++) {
+								for (int j = 0; j < 9; j++) {
+									if (myPanel.colorArray[j][i].equals(Color.white)) {
+										revealSquare(myPanel, j, i, bombGrid);
+									}
+								}
+							}
+						}
 					}
 				}
 			}
