@@ -14,6 +14,7 @@ public class BombSetter {
 			numberOfBombs= Integer.parseInt(JOptionPane.showInputDialog("Select a number of bombs between 10 and 20: "));
 		} 
 		
+		
 		//Bombs placed randomly in bombGrid
 		int bombsPlaced = 0;
 		while (bombsPlaced < numberOfBombs) {
@@ -74,8 +75,21 @@ public class BombSetter {
 		}
 		return bombGrid;
 	}
+
+
+	public int getNumberOfBombs() {
+		return numberOfBombs;
+	}
+
 	
 }
+
+
+
+
+
+
+
 
 
 

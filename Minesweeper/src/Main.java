@@ -2,11 +2,15 @@ import javax.swing.JFrame;
 
 public class Main {
 	public static void main(String[] args) {
-		
-		//TODO: on click, start new game
 
-		NewGame currentGame = new NewGame();
-		JFrame myFrame = currentGame.clearGrid();
+		JFrame myFrame = new JFrame("Color Grid");
+		myFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		myFrame.setLocation(400, 150);
+		myFrame.setSize(325, 345);
+
+		MyPanel myPanel = new MyPanel();
+		myFrame.add(myPanel);
+		myFrame.setVisible(true);
 		
 		BombSetter bombSetter = new BombSetter();
 		String[][] bombGrid = bombSetter.setBombs();
@@ -14,6 +18,7 @@ public class Main {
 		MyMouseAdapter myMouseAdapter = new MyMouseAdapter(bombGrid);
 		myFrame.addMouseListener(myMouseAdapter);
 		
+		int emptySquares = bombSetter.getNumberOfBombs();
 		
 		
 	}

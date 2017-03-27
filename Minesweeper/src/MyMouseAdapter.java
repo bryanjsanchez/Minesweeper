@@ -1,4 +1,5 @@
 import java.awt.Color;
+
 import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
@@ -46,11 +47,33 @@ public class MyMouseAdapter extends MouseAdapter {
 	}
 	
 	
-	public void revealSquare(MyPanel myPanel, String[][] bombGrid) {
-		if (myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY].equals(Color.white)) {
+	public void revealSquare(MyPanel myPanel, int x, int y, String[][] bombGrid) {
+		if (myPanel.colorArray[x][y].equals(Color.white)) {
 			Color newColor = null;
-			switch (bombGrid[myPanel.mouseDownGridX][myPanel.mouseDownGridY]) {
+			
+			switch (bombGrid[x][y]) {
 			case "0":
+				newColor = Color.lightGray;
+				myPanel.colorArray[x][y] = newColor;
+				myPanel.repaint();
+				for (int d = -1; d <= 1; d++) {
+					if ((x + d >= 0) && (x + d < 9) && (y - 1 >= 0) && (y - 1 < 9)) { //index in range
+						revealSquare(myPanel, x + d, y - 1, bombGrid);
+					}
+				}
+
+				for (int d = -1; d <= 1; d += 2) {
+					if ((x + d >= 0) && (x + d < 9) && (y >= 0) && (y < 9)) { //index in range
+						revealSquare(myPanel, x + d, y, bombGrid);
+					}
+				}
+
+				for (int d = -1; d <= 1; d++) {
+					if ((x + d >= 0) && (x + d < 9) && (y + 1 >= 0) && (y+1 < 9)) { //index in range
+						revealSquare(myPanel, x + d, y + 1, bombGrid);
+					}
+				}
+				break;
 			case "1":
 			case "2":
 			case "3":
@@ -60,13 +83,16 @@ public class MyMouseAdapter extends MouseAdapter {
 			case "7":
 			case "8":
 				newColor = Color.lightGray;
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
 				break;
 			case "b":
 				newColor = Color.black;
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
 				break;
 			}
-			myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY] = newColor;
-            myPanel.repaint();
+			
         }
 	}
 	
@@ -108,7 +134,8 @@ public class MyMouseAdapter extends MouseAdapter {
 						//Released the mouse button on the same cell where it was pressed
 
 						//On the grid other than on the left column and on the top row:
-						revealSquare(myPanel, bombGrid);
+						
+						revealSquare(myPanel, myPanel.mouseDownGridX, myPanel.mouseDownGridY, bombGrid);
 					}
 				}
 			}
