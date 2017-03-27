@@ -53,7 +53,7 @@ public class MyMouseAdapter extends MouseAdapter {
 			
 			switch (bombGrid[x][y]) {
 			case "0":
-				newColor = Color.lightGray;
+				newColor = new Color(0xeeeeee);
 				myPanel.colorArray[x][y] = newColor;
 				myPanel.repaint();
 				for (int d = -1; d <= 1; d++) {
@@ -75,14 +75,42 @@ public class MyMouseAdapter extends MouseAdapter {
 				}
 				break;
 			case "1":
+				newColor = new Color(0xcccccc);
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
+				break;
 			case "2":
+				newColor = new Color(0xaaaaaa);
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
+				break;
 			case "3":
+				newColor = new Color(0x888888);
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
+				break;
 			case "4":
+				newColor = new Color(0x666666);
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
+				break;
 			case "5": 
+				newColor = new Color(0x444444);
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
+				break;
 			case "6":
+				newColor = new Color(0x333333);
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
+				break;
 			case "7":
+				newColor = new Color(0x222222);
+				myPanel.colorArray[x][y] = newColor;
+	            myPanel.repaint();
+				break;
 			case "8":
-				newColor = Color.lightGray;
+				newColor = new Color(0x111111);
 				myPanel.colorArray[x][y] = newColor;
 	            myPanel.repaint();
 				break;
