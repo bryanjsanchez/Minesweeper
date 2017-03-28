@@ -6,15 +6,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class MyMouseAdapter extends MouseAdapter {
-	
+
 	private String[][] bombGrid;
-	
-	public MyMouseAdapter(String[][] bombGrid) {
+	public int emptySquares;
+
+	public MyMouseAdapter(String[][] bombGrid, int emptySquares) {
 		this.bombGrid = bombGrid;
+		this.emptySquares = emptySquares;
 	}
-	
+
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
 		case 1:
@@ -45,17 +48,18 @@ public class MyMouseAdapter extends MouseAdapter {
 			break;
 		}
 	}
-	
-	
+
+
 	public void revealSquare(MyPanel myPanel, int x, int y, String[][] bombGrid) {
 		if (myPanel.colorArray[x][y].equals(Color.white)) {
 			Color newColor = null;
-			
+
 			switch (bombGrid[x][y]) {
 			case "0":
 				newColor = new Color(0xeeeeee);
 				myPanel.colorArray[x][y] = newColor;
 				myPanel.repaint();
+				emptySquares--;
 				for (int d = -1; d <= 1; d++) {
 					if ((x + d >= 0) && (x + d < 9) && (y - 1 >= 0) && (y - 1 < 9)) { //index in range
 						revealSquare(myPanel, x + d, y - 1, bombGrid);
@@ -77,53 +81,61 @@ public class MyMouseAdapter extends MouseAdapter {
 			case "1":
 				newColor = new Color(0xcccccc);
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
+				emptySquares--;
 				break;
 			case "2":
 				newColor = new Color(0xaaaaaa);
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
+				emptySquares--;
 				break;
 			case "3":
 				newColor = new Color(0x888888);
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
+				emptySquares--;
 				break;
 			case "4":
 				newColor = new Color(0x666666);
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
+				emptySquares--;
 				break;
 			case "5": 
 				newColor = new Color(0x444444);
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
+				emptySquares--;
 				break;
 			case "6":
 				newColor = new Color(0x333333);
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
+				emptySquares--;
 				break;
 			case "7":
 				newColor = new Color(0x222222);
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
+				emptySquares--;
 				break;
 			case "8":
 				newColor = new Color(0x111111);
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
+				emptySquares--;
 				break;
 			case "b":
 				newColor = Color.black;
 				myPanel.colorArray[x][y] = newColor;
-	            myPanel.repaint();
+				myPanel.repaint();
 				break;
 			}
-			
-        }
+
+		}
 	}
-	
+
 	public void mouseReleased(MouseEvent e) {
 		Component c = e.getComponent();
 		while (!(c instanceof JFrame)) {
@@ -144,7 +156,6 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanel.y = y;
 		int gridX = myPanel.getGridX(x, y);
 		int gridY = myPanel.getGridY(x, y);
-		
 		switch (e.getButton()) {
 		case 1:		//Left mouse button
 			if ((myPanel.mouseDownGridX == -1) || (myPanel.mouseDownGridY == -1)) {
@@ -162,9 +173,11 @@ public class MyMouseAdapter extends MouseAdapter {
 						//Released the mouse button on the same cell where it was pressed
 
 						//On the grid other than on the left column and on the top row:
-						
+
 						revealSquare(myPanel, myPanel.mouseDownGridX, myPanel.mouseDownGridY, bombGrid);
+
 						if (bombGrid[myPanel.mouseDownGridX][myPanel.mouseDownGridY] == "b") {
+							emptySquares = -1;
 							for (int i = 0; i < 9; i++) {
 								for (int j = 0; j < 9; j++) {
 									if (myPanel.colorArray[j][i].equals(Color.white)) {
@@ -172,6 +185,7 @@ public class MyMouseAdapter extends MouseAdapter {
 									}
 								}
 							}
+							JOptionPane.showMessageDialog(null, "Game Over");
 						}
 					}
 				}
@@ -193,5 +207,16 @@ public class MyMouseAdapter extends MouseAdapter {
 			//Do nothing
 			break;
 		}
+		if (emptySquares == 0) {
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++) {
+					if (myPanel.colorArray[j][i].equals(Color.white)) {
+						revealSquare(myPanel, j, i, bombGrid);
+					}
+				}
+			}
+			JOptionPane.showMessageDialog(null, "Congratulations! You Win!");
+		}
 	}
 }
+

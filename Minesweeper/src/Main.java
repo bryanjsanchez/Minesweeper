@@ -14,11 +14,9 @@ public class Main {
 		
 		BombSetter bombSetter = new BombSetter();
 		String[][] bombGrid = bombSetter.setBombs();
+		int emptySquares = 81 - bombSetter.getNumberOfBombs();
 		
-		MyMouseAdapter myMouseAdapter = new MyMouseAdapter(bombGrid);
+		MyMouseAdapter myMouseAdapter = new MyMouseAdapter(bombGrid, emptySquares);
 		myFrame.addMouseListener(myMouseAdapter);
-		
-		int emptySquares = bombSetter.getNumberOfBombs();
-	
 	}
 }
