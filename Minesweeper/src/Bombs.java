@@ -2,13 +2,20 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
-public class BombSetter {
+public class Bombs {
 	
 	private int numberOfBombs = 0;
 	private String[][] bombGrid = new String[9][9];
 	
+	public int getNumberOfBombs() {
+		return numberOfBombs;
+	}
 	
-	public String[][] setBombs() {
+	public String[][] getBombGrid() {
+		return bombGrid;
+	}
+	
+	public void setBombs() {
 		//Player enters number of bombs
 		while (numberOfBombs < 10 || numberOfBombs > 20) { 
 			numberOfBombs= Integer.parseInt(JOptionPane.showInputDialog("Select a number of bombs between 10 and 20: "));
@@ -65,23 +72,16 @@ public class BombSetter {
 				}
 			}
 		}
-		
-		//Cheat: Reveals bombGrid in Console
+	}
+
+	public void printBombGrid() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				System.out.print(bombGrid[j][i]);
 			}
 			System.out.println();
 		}
-		return bombGrid;
 	}
-
-
-	public int getNumberOfBombs() {
-		return numberOfBombs;
-	}
-
-	
 }
 
 

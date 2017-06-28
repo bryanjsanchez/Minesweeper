@@ -12,9 +12,11 @@ public class Main {
 		myFrame.add(myPanel);
 		myFrame.setVisible(true);
 		
-		BombSetter bombSetter = new BombSetter();
-		String[][] bombGrid = bombSetter.setBombs();
-		int emptySquares = 81 - bombSetter.getNumberOfBombs();
+		Bombs bombs = new Bombs();
+		bombs.setBombs();
+		bombs.printBombGrid();
+		String[][] bombGrid = bombs.getBombGrid();
+		int emptySquares = 81 - bombs.getNumberOfBombs();
 		
 		MyMouseAdapter myMouseAdapter = new MyMouseAdapter(bombGrid, emptySquares);
 		myFrame.addMouseListener(myMouseAdapter);
