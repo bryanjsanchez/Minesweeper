@@ -12,13 +12,7 @@ public class Main {
 		myFrame.add(myPanel);
 		myFrame.setVisible(true);
 		
-		Bombs bombs = new Bombs();
-		bombs.setBombs();
-		bombs.printBombGrid();
-		String[][] bombGrid = bombs.getBombGrid();
-		int emptySquares = 81 - bombs.getNumberOfBombs();
-		
-		MyMouseAdapter myMouseAdapter = new MyMouseAdapter(bombGrid, emptySquares);
+		MyMouseAdapter myMouseAdapter = new MyMouseAdapter(myPanel.getBombGrid());
 		myFrame.addMouseListener(myMouseAdapter);
 	}
 }

@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class MyPanel extends JPanel {
@@ -17,7 +18,13 @@ public class MyPanel extends JPanel {
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
+	private Bombs bombs = new Bombs();
+	private String[][] bombGrid = bombs.getBombGrid();
+	private int emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
+
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
+		bombs.setBombs();
+		bombs.printBombGrid();
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("INNER_CELL_SIZE must be positive!");
 		}
@@ -27,13 +34,18 @@ public class MyPanel extends JPanel {
 		if (TOTAL_ROWS + (new Random()).nextInt(1) < 3) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("TOTAL_ROWS must be at least 3!");
 		}
-		
+
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {   //The rest of the grid
 			for (int y = 0; y < TOTAL_ROWS; y++) {
 				colorArray[x][y] = Color.WHITE;
 			}
 		}
 	}
+
+	public String[][] getBombGrid() {
+		return bombGrid;
+	}
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -115,5 +127,121 @@ public class MyPanel extends JPanel {
 			return -1;
 		}
 		return y;
+	}
+
+	public void revealSquare(int x, int y, String[][] bombGrid) {
+		if (colorArray[x][y].equals(Color.white)) {
+			Color newColor = null;
+
+			switch (bombGrid[x][y]) {
+			case "0":
+				newColor = new Color(0xeeeeee);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				for (int d = -1; d <= 1; d++) {
+					if ((x + d >= 0) && (x + d < 9) && (y - 1 >= 0) && (y - 1 < 9)) { //index in range
+						revealSquare(x + d, y - 1, bombGrid);
+					}
+				}
+
+				for (int d = -1; d <= 1; d += 2) {
+					if ((x + d >= 0) && (x + d < 9) && (y >= 0) && (y < 9)) { //index in range
+						revealSquare(x + d, y, bombGrid);
+					}
+				}
+
+				for (int d = -1; d <= 1; d++) {
+					if ((x + d >= 0) && (x + d < 9) && (y + 1 >= 0) && (y+1 < 9)) { //index in range
+						revealSquare(x + d, y + 1, bombGrid);
+					}
+				}
+				break;
+			case "1":
+				newColor = new Color(0xcccccc);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				break;
+			case "2":
+				newColor = new Color(0xaaaaaa);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				break;
+			case "3":
+				newColor = new Color(0x888888);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				break;
+			case "4":
+				newColor = new Color(0x666666);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				break;
+			case "5": 
+				newColor = new Color(0x444444);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				break;
+			case "6":
+				newColor = new Color(0x333333);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				break;
+			case "7":
+				newColor = new Color(0x222222);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				break;
+			case "8":
+				newColor = new Color(0x111111);
+				colorArray[x][y] = newColor;
+				repaint();
+				emptySquares--;
+				break;
+			case "b":
+				newColor = Color.black;
+				colorArray[x][y] = newColor;
+				repaint();
+				break;
+			}
+		}
+	}
+	public void revealSquare(String[][] bombGrid) {
+		revealSquare(mouseDownGridX, mouseDownGridY, bombGrid);
+	}
+
+	public void checkIfWon() {
+		System.out.println(emptySquares);
+		if (emptySquares == bombs.getNumberOfBombs()) {
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++) {
+					if (colorArray[j][i].equals(Color.white)) {
+						revealSquare(j, i, bombs.getBombGrid());
+					}
+				}
+			}
+			JOptionPane.showMessageDialog(null, "Congratulations! You Win!");
+		}
+	}
+
+	public void checkIfGameOver() {
+		if (bombs.getBombGrid()[mouseDownGridX][mouseDownGridY] == "b") {
+			emptySquares = -1;
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++) {
+					if (colorArray[j][i].equals(Color.white)) {
+						revealSquare(j, i, bombs.getBombGrid());
+					}
+				}
+			}
+			JOptionPane.showMessageDialog(null, "Game Over");
+		}
 	}
 }
