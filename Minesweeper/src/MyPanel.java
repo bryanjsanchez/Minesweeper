@@ -1,30 +1,39 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class MyPanel extends JPanel {
 	private static final long serialVersionUID = 3426940946811133635L;
 	private static final int GRID_X = 25;
-	private static final int GRID_Y = 25;
+	private static final int GRID_Y = 55;
 	private static final int INNER_CELL_SIZE = 29;
-	private static final int TOTAL_COLUMNS = 9;
-	private static final int TOTAL_ROWS = 9;
+	public static final int TOTAL_COLUMNS = 9;
+	public static final int TOTAL_ROWS = 9;
 	public int x = -1;
 	public int y = -1;
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
-	private Bombs bombs = new Bombs();
-	private String[][] bombGrid = bombs.getBombGrid();
-	private int emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
-
-	public MyPanel() {   //This is the constructor... this code runs first to initialize
-		bombs.setBombs();
-		bombs.printBombGrid();
+	private Bombs bombs;
+	private int emptySquares;
+	
+	
+	public MyPanel(Bombs bombs) {   //This is the constructor... this code runs first to initialize
+		
+		this.bombs = bombs;
+		emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
+		
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("INNER_CELL_SIZE must be positive!");
 		}
@@ -40,10 +49,31 @@ public class MyPanel extends JPanel {
 				colorArray[x][y] = Color.WHITE;
 			}
 		}
-	}
-
-	public String[][] getBombGrid() {
-		return bombGrid;
+		JButton resetButton = new JButton();
+		try {
+			Image img = ImageIO.read(getClass().getResource("resetButton.png")).getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH );
+			resetButton.setIcon(new ImageIcon(img));
+			resetButton.setBounds((320 - 30)/2,15,50,50);
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
+		resetButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				bombs.setBombs();
+				bombs.printBombGrid();
+				emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
+				for (int i = 0; i < 9; i++) {
+					for (int j = 0; j < 9; j++) {
+						colorArray[j][i] = Color.white;
+					}
+				}
+				
+				repaint();
+			}
+		});
+		add(resetButton);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -53,14 +83,24 @@ public class MyPanel extends JPanel {
 		Insets myInsets = getInsets();
 		int x1 = myInsets.left;
 		int y1 = myInsets.top;
-		int x2 = getWidth() - myInsets.right - 1;
-		int y2 = getHeight() - myInsets.bottom - 1;
-		int width = x2 - x1;
-		int height = y2 - y1;
+		//int x2 = getWidth() - myInsets.right - 1;
+		//int y2 = getHeight() - myInsets.bottom - 1;
+		//int width = x2 - x1;
+		//int height = y2 - y1;
 
 		//Paint the background
-		g.setColor(new Color(0x964B00));
-		g.fillRect(x1, y1, width + 1, height + 1);
+		//g.setColor(new Color(0x964B00));
+		//g.fillRect(x1, y1, width + 1, height + 1);
+		try {
+			BufferedImage background = ImageIO.read(getClass().getResource("background.jpg"));
+			g.drawImage(background, 0, 0, null);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "The graphic files are either corrupt or missing.",
+					"VoidSpace - Fatal Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		
 
 		//Draw the grid
 		//By default, the grid will be 9x9 (see above: TOTAL_COLUMNS and TOTAL_ROWS) 
@@ -129,11 +169,11 @@ public class MyPanel extends JPanel {
 		return y;
 	}
 
-	public void revealSquare(int x, int y, String[][] bombGrid) {
+	public void revealSquare(int x, int y) {
 		if (colorArray[x][y].equals(Color.white)) {
 			Color newColor = null;
 
-			switch (bombGrid[x][y]) {
+			switch (bombs.getBombGrid()[x][y]) {
 			case "0":
 				newColor = new Color(0xeeeeee);
 				colorArray[x][y] = newColor;
@@ -141,19 +181,19 @@ public class MyPanel extends JPanel {
 				emptySquares--;
 				for (int d = -1; d <= 1; d++) {
 					if ((x + d >= 0) && (x + d < 9) && (y - 1 >= 0) && (y - 1 < 9)) { //index in range
-						revealSquare(x + d, y - 1, bombGrid);
+						revealSquare(x + d, y - 1);
 					}
 				}
 
 				for (int d = -1; d <= 1; d += 2) {
 					if ((x + d >= 0) && (x + d < 9) && (y >= 0) && (y < 9)) { //index in range
-						revealSquare(x + d, y, bombGrid);
+						revealSquare(x + d, y);
 					}
 				}
 
 				for (int d = -1; d <= 1; d++) {
 					if ((x + d >= 0) && (x + d < 9) && (y + 1 >= 0) && (y+1 < 9)) { //index in range
-						revealSquare(x + d, y + 1, bombGrid);
+						revealSquare(x + d, y + 1);
 					}
 				}
 				break;
@@ -213,8 +253,8 @@ public class MyPanel extends JPanel {
 			}
 		}
 	}
-	public void revealSquare(String[][] bombGrid) {
-		revealSquare(mouseDownGridX, mouseDownGridY, bombGrid);
+	public void revealSquare() {
+		revealSquare(mouseDownGridX, mouseDownGridY);
 	}
 
 	public void checkIfWon() {
@@ -223,7 +263,7 @@ public class MyPanel extends JPanel {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					if (colorArray[j][i].equals(Color.white)) {
-						revealSquare(j, i, bombs.getBombGrid());
+						revealSquare(j, i);
 					}
 				}
 			}
@@ -237,7 +277,7 @@ public class MyPanel extends JPanel {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					if (colorArray[j][i].equals(Color.white)) {
-						revealSquare(j, i, bombs.getBombGrid());
+						revealSquare(j, i);
 					}
 				}
 			}

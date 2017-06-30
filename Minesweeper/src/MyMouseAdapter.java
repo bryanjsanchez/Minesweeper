@@ -9,12 +9,6 @@ import javax.swing.JFrame;
 
 public class MyMouseAdapter extends MouseAdapter {
 
-	private String[][] bombGrid;
-
-	public MyMouseAdapter(String[][] bombGrid) {
-		this.bombGrid = bombGrid;
-	}
-
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
 		case 1:
@@ -84,7 +78,7 @@ public class MyMouseAdapter extends MouseAdapter {
 
 						//On the grid other than on the left column and on the top row:
 
-						myPanel.revealSquare(bombGrid);
+						myPanel.revealSquare();
 						myPanel.checkIfGameOver();
 					}
 				}

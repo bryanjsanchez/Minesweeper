@@ -3,9 +3,10 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class Bombs {
-	
+	private int rows = MyPanel.TOTAL_ROWS;
+	private int columns = MyPanel.TOTAL_COLUMNS;
 	private int numberOfBombs = 0;
-	private String[][] bombGrid = new String[9][9];
+	private static String[][] bombGrid = new String[MyPanel.TOTAL_COLUMNS][MyPanel.TOTAL_ROWS];
 	
 	public int getNumberOfBombs() {
 		return numberOfBombs;
@@ -17,17 +18,26 @@ public class Bombs {
 	
 	public void setBombs() {
 		//Player enters number of bombs
+		numberOfBombs = 0;
 		while (numberOfBombs < 10 || numberOfBombs > 20) { 
 			numberOfBombs= Integer.parseInt(JOptionPane.showInputDialog("Select a number of bombs between 10 and 20: "));
 		} 
 		
+		//Clear bombGrid if values not null
+		if (bombGrid[0][0] != null) {
+			for (int y = 0; y < rows; y++) {
+				for (int x = 0; x < columns; x++) {
+					bombGrid[x][y] = null;
+				}
+			}
+		}
 		
 		//Bombs placed randomly in bombGrid
 		int bombsPlaced = 0;
 		while (bombsPlaced < numberOfBombs) {
 			Random r = new Random();
-			int x = r.nextInt(9);
-			int y = r.nextInt(9);
+			int x = r.nextInt(columns);
+			int y = r.nextInt(rows);
 			if (bombGrid[x][y] != "b") {
 				bombGrid[x][y] = "b";
 				bombsPlaced++;
@@ -75,9 +85,9 @@ public class Bombs {
 	}
 
 	public void printBombGrid() {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				System.out.print(bombGrid[j][i]);
+		for (int y = 0; y < 9; y++) {
+			for (int x = 0; x < 9; x++) {
+				System.out.print(bombGrid[x][y]);
 			}
 			System.out.println();
 		}
