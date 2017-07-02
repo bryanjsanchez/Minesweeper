@@ -85,7 +85,7 @@ public class MyMouseAdapter extends MouseAdapter {
 			myPanel.repaint();
 			break;
 		case 3:		//Right mouse button
-			if (myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY].equals(Color.white)) {
+			if (myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY].equals(myPanel.hiddenCellColor)) {
 				if (myPanel.flags.getFlagArray()[myPanel.mouseDownGridX][myPanel.mouseDownGridY] == true) {
 					myPanel.flags.hideFlag(myPanel.mouseDownGridX, myPanel.mouseDownGridY);
 				} else {

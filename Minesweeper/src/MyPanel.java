@@ -28,6 +28,7 @@ public class MyPanel extends JPanel {
 	private Bombs bombs;
 	public Flags flags = new Flags();
 	private int emptySquares;
+	public Color hiddenCellColor = new Color(0xeeeeee);
 
 
 	public MyPanel(Bombs bombs) {   //This is the constructor... this code runs first to initialize
@@ -47,7 +48,7 @@ public class MyPanel extends JPanel {
 
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {   //The rest of the grid
 			for (int y = 0; y < TOTAL_ROWS; y++) {
-				colorArray[x][y] = Color.WHITE;
+				colorArray[x][y] = hiddenCellColor;
 			}
 		}
 		JButton resetButton = new JButton();
@@ -68,7 +69,7 @@ public class MyPanel extends JPanel {
 				emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
 				for (int i = 0; i < 9; i++) {
 					for (int j = 0; j < 9; j++) {
-						colorArray[j][i] = Color.white;
+						colorArray[j][i] = hiddenCellColor;
 					}
 				}
 
@@ -182,14 +183,13 @@ public class MyPanel extends JPanel {
 	}
 
 	public void revealSquare(int x, int y) {
-		if (colorArray[x][y].equals(Color.white)) {
+		if (colorArray[x][y].equals(hiddenCellColor)) {
 			Color newColor = null;
 
 			switch (bombs.getBombGrid()[x][y]) {
 			case "0":
 				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0xeeeeee);
-					colorArray[x][y] = newColor;
+					colorArray[x][y] = Color.white;
 					repaint();
 				}
 
@@ -296,7 +296,7 @@ public class MyPanel extends JPanel {
 			flags.hideAllFlags();
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
-					if (colorArray[j][i].equals(Color.white)) {
+					if (colorArray[j][i].equals(hiddenCellColor)) {
 						revealSquare(j, i);
 					}
 				}
@@ -311,7 +311,7 @@ public class MyPanel extends JPanel {
 			emptySquares = -1;
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
-					if (colorArray[j][i].equals(Color.white)) {
+					if (colorArray[j][i].equals(hiddenCellColor)) {
 						revealSquare(j, i);
 					}
 				}
