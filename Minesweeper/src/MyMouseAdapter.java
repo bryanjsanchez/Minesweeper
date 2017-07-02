@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 public class MyMouseAdapter extends MouseAdapter {
-
+	
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
 		case 1:
@@ -77,7 +77,6 @@ public class MyMouseAdapter extends MouseAdapter {
 						//Released the mouse button on the same cell where it was pressed
 
 						//On the grid other than on the left column and on the top row:
-
 						myPanel.revealSquare();
 						myPanel.checkIfGameOver();
 					}
@@ -86,15 +85,15 @@ public class MyMouseAdapter extends MouseAdapter {
 			myPanel.repaint();
 			break;
 		case 3:		//Right mouse button
-			Color newColor = null;
 			if (myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY].equals(Color.white)) {
-				newColor = Color.red;
-			} else if (myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY].equals(Color.red)) {
-				newColor = Color.white;
+				if (myPanel.flags.getFlagArray()[myPanel.mouseDownGridX][myPanel.mouseDownGridY] == true) {
+					myPanel.flags.hideFlag(myPanel.mouseDownGridX, myPanel.mouseDownGridY);
+				} else {
+					myPanel.flags.revealFlag(myPanel.mouseDownGridX, myPanel.mouseDownGridY);
+				}
 			} else {
 				break;
 			}
-			myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY] = newColor;
 			myPanel.repaint();
 		default:    //Some other button (2 = Middle mouse button, etc.)
 			//Do nothing

@@ -26,14 +26,15 @@ public class MyPanel extends JPanel {
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
 	private Bombs bombs;
+	public Flags flags = new Flags();
 	private int emptySquares;
-	
-	
+
+
 	public MyPanel(Bombs bombs) {   //This is the constructor... this code runs first to initialize
-		
+
 		this.bombs = bombs;
 		emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
-		
+
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("INNER_CELL_SIZE must be positive!");
 		}
@@ -51,7 +52,7 @@ public class MyPanel extends JPanel {
 		}
 		JButton resetButton = new JButton();
 		try {
-			Image img = ImageIO.read(getClass().getResource("resetButton.png")).getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH );
+			Image img = ImageIO.read(getClass().getResource("img/resetButton.png")).getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH );
 			resetButton.setIcon(new ImageIcon(img));
 			resetButton.setBounds((320 - 30)/2,15,50,50);
 		} catch (Exception ex) {
@@ -61,6 +62,7 @@ public class MyPanel extends JPanel {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				flags.hideAllFlags();
 				bombs.setBombs();
 				bombs.printBombGrid();
 				emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
@@ -69,7 +71,7 @@ public class MyPanel extends JPanel {
 						colorArray[j][i] = Color.white;
 					}
 				}
-				
+
 				repaint();
 			}
 		});
@@ -92,7 +94,7 @@ public class MyPanel extends JPanel {
 		//g.setColor(new Color(0x964B00));
 		//g.fillRect(x1, y1, width + 1, height + 1);
 		try {
-			BufferedImage background = ImageIO.read(getClass().getResource("background.jpg"));
+			BufferedImage background = ImageIO.read(getClass().getResource("img/background.jpg"));
 			g.drawImage(background, 0, 0, null);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "The graphic files are either corrupt or missing.",
@@ -100,7 +102,7 @@ public class MyPanel extends JPanel {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		
+
 
 		//Draw the grid
 		//By default, the grid will be 9x9 (see above: TOTAL_COLUMNS and TOTAL_ROWS) 
@@ -122,6 +124,16 @@ public class MyPanel extends JPanel {
 				}
 			}
 		}
+
+		//Paint flags
+		for (int x = 0; x < TOTAL_COLUMNS; x++) {
+			for (int y = 0; y < TOTAL_ROWS; y++) {
+				if (flags.getFlagArray()[x][y] == true) {
+					g.drawImage(flags.flagImage, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, null);
+				}
+			}
+		}
+
 	}
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();
@@ -175,9 +187,12 @@ public class MyPanel extends JPanel {
 
 			switch (bombs.getBombGrid()[x][y]) {
 			case "0":
-				newColor = new Color(0xeeeeee);
-				colorArray[x][y] = newColor;
-				repaint();
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0xeeeeee);
+					colorArray[x][y] = newColor;
+					repaint();
+				}
+
 				emptySquares--;
 				for (int d = -1; d <= 1; d++) {
 					if ((x + d >= 0) && (x + d < 9) && (y - 1 >= 0) && (y - 1 < 9)) { //index in range
@@ -198,57 +213,75 @@ public class MyPanel extends JPanel {
 				}
 				break;
 			case "1":
-				newColor = new Color(0xcccccc);
-				colorArray[x][y] = newColor;
-				repaint();
-				emptySquares--;
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0xcccccc);
+					colorArray[x][y] = newColor;
+					repaint();
+					emptySquares--;
+				}
 				break;
 			case "2":
-				newColor = new Color(0xaaaaaa);
-				colorArray[x][y] = newColor;
-				repaint();
-				emptySquares--;
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0xaaaaaa);
+					colorArray[x][y] = newColor;
+					repaint();
+					emptySquares--;
+				}
 				break;
 			case "3":
-				newColor = new Color(0x888888);
-				colorArray[x][y] = newColor;
-				repaint();
-				emptySquares--;
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0x888888);
+					colorArray[x][y] = newColor;
+					repaint();
+					emptySquares--;
+				}
 				break;
 			case "4":
-				newColor = new Color(0x666666);
-				colorArray[x][y] = newColor;
-				repaint();
-				emptySquares--;
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0x666666);
+					colorArray[x][y] = newColor;
+					repaint();
+					emptySquares--;
+				}
 				break;
 			case "5": 
-				newColor = new Color(0x444444);
-				colorArray[x][y] = newColor;
-				repaint();
-				emptySquares--;
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0x444444);
+					colorArray[x][y] = newColor;
+					repaint();
+					emptySquares--;
+				}
 				break;
 			case "6":
-				newColor = new Color(0x333333);
-				colorArray[x][y] = newColor;
-				repaint();
-				emptySquares--;
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0x333333);
+					colorArray[x][y] = newColor;
+					repaint();
+					emptySquares--;
+				}
 				break;
 			case "7":
-				newColor = new Color(0x222222);
-				colorArray[x][y] = newColor;
-				repaint();
-				emptySquares--;
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0x222222);
+					colorArray[x][y] = newColor;
+					repaint();
+					emptySquares--;
+				}
 				break;
 			case "8":
-				newColor = new Color(0x111111);
-				colorArray[x][y] = newColor;
-				repaint();
-				emptySquares--;
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = new Color(0x111111);
+					colorArray[x][y] = newColor;
+					repaint();
+					emptySquares--;
+				}
 				break;
 			case "b":
-				newColor = Color.black;
-				colorArray[x][y] = newColor;
-				repaint();
+				if (flags.getFlagArray()[x][y] == false) {
+					newColor = Color.black;
+					colorArray[x][y] = newColor;
+					repaint();
+				}
 				break;
 			}
 		}
@@ -260,6 +293,7 @@ public class MyPanel extends JPanel {
 	public void checkIfWon() {
 		System.out.println(emptySquares);
 		if (emptySquares == bombs.getNumberOfBombs()) {
+			flags.hideAllFlags();
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					if (colorArray[j][i].equals(Color.white)) {
@@ -273,6 +307,7 @@ public class MyPanel extends JPanel {
 
 	public void checkIfGameOver() {
 		if (bombs.getBombGrid()[mouseDownGridX][mouseDownGridY] == "b") {
+			flags.hideAllFlags();
 			emptySquares = -1;
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
