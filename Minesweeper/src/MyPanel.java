@@ -92,8 +92,6 @@ public class MyPanel extends JPanel {
 		//int height = y2 - y1;
 
 		//Paint the background
-		//g.setColor(new Color(0x964B00));
-		//g.fillRect(x1, y1, width + 1, height + 1);
 		try {
 			BufferedImage background = ImageIO.read(getClass().getResource("img/background.jpg"));
 			g.drawImage(background, 0, 0, null);
@@ -126,6 +124,15 @@ public class MyPanel extends JPanel {
 			}
 		}
 
+		//Paint cell labels
+		for (int x = 0; x < TOTAL_COLUMNS; x++) {
+			for (int y = 0; y < TOTAL_ROWS; y++) {
+				if (bombs.getRevealedCell()[x][y] == true) {
+					g.drawImage(bombs.getLabelArray()[x][y], x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, null);
+				}
+			}
+		}
+		
 		//Paint flags
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {
 			for (int y = 0; y < TOTAL_ROWS; y++) {
@@ -183,13 +190,12 @@ public class MyPanel extends JPanel {
 	}
 
 	public void revealSquare(int x, int y) {
-		if (colorArray[x][y].equals(hiddenCellColor)) {
-			Color newColor = null;
-
+		if (bombs.getRevealedCell()[x][y] == false) {
 			switch (bombs.getBombGrid()[x][y]) {
 			case "0":
 				if (flags.getFlagArray()[x][y] == false) {
 					colorArray[x][y] = Color.white;
+					bombs.revealCell(x, y);
 					repaint();
 				}
 
@@ -212,75 +218,11 @@ public class MyPanel extends JPanel {
 					}
 				}
 				break;
-			case "1":
+			default:
 				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0xcccccc);
-					colorArray[x][y] = newColor;
+					bombs.revealCell(x, y);
 					repaint();
 					emptySquares--;
-				}
-				break;
-			case "2":
-				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0xaaaaaa);
-					colorArray[x][y] = newColor;
-					repaint();
-					emptySquares--;
-				}
-				break;
-			case "3":
-				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0x888888);
-					colorArray[x][y] = newColor;
-					repaint();
-					emptySquares--;
-				}
-				break;
-			case "4":
-				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0x666666);
-					colorArray[x][y] = newColor;
-					repaint();
-					emptySquares--;
-				}
-				break;
-			case "5": 
-				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0x444444);
-					colorArray[x][y] = newColor;
-					repaint();
-					emptySquares--;
-				}
-				break;
-			case "6":
-				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0x333333);
-					colorArray[x][y] = newColor;
-					repaint();
-					emptySquares--;
-				}
-				break;
-			case "7":
-				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0x222222);
-					colorArray[x][y] = newColor;
-					repaint();
-					emptySquares--;
-				}
-				break;
-			case "8":
-				if (flags.getFlagArray()[x][y] == false) {
-					newColor = new Color(0x111111);
-					colorArray[x][y] = newColor;
-					repaint();
-					emptySquares--;
-				}
-				break;
-			case "b":
-				if (flags.getFlagArray()[x][y] == false) {
-					newColor = Color.black;
-					colorArray[x][y] = newColor;
-					repaint();
 				}
 				break;
 			}
@@ -296,7 +238,7 @@ public class MyPanel extends JPanel {
 			flags.hideAllFlags();
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
-					if (colorArray[j][i].equals(hiddenCellColor)) {
+					if (bombs.getRevealedCell()[j][i] == false) {
 						revealSquare(j, i);
 					}
 				}
@@ -311,7 +253,7 @@ public class MyPanel extends JPanel {
 			emptySquares = -1;
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
-					if (colorArray[j][i].equals(hiddenCellColor)) {
+					if (bombs.getRevealedCell()[j][i] == false) {
 						revealSquare(j, i);
 					}
 				}

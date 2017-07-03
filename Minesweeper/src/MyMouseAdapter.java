@@ -1,5 +1,3 @@
-import java.awt.Color;
-
 import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
