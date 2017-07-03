@@ -77,8 +77,10 @@ public class MyMouseAdapter extends MouseAdapter {
 						//Released the mouse button on the same cell where it was pressed
 
 						//On the grid other than on the left column and on the top row:
-						myPanel.revealSquare();
-						myPanel.checkIfGameOver();
+						if (myPanel.flags.getFlagArray()[myPanel.mouseDownGridX][myPanel.mouseDownGridY] == false) {
+							myPanel.revealSquare();
+							myPanel.checkIfGameOver();
+						}
 					}
 				}
 			}
