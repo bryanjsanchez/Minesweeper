@@ -64,7 +64,7 @@ public class Bombs {
 			numberOfBombs= Integer.parseInt(JOptionPane.showInputDialog("Select a number of bombs between 10 and 20: "));
 		} 
 
-		//Clear bombGrid if values not null
+		//Clear bombGrid
 		for (int y = 0; y < rows; y++) {
 			for (int x = 0; x < columns; x++) {
 				bombGrid[x][y] = null;

@@ -25,17 +25,15 @@ public class MyPanel extends JPanel {
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
-	private Bombs bombs;
+	private Bombs bombs = new Bombs();
 	public Flags flags = new Flags();
 	private int emptySquares;
 	public Color hiddenCellColor = new Color(0xeeeeee);
+	public JButton resetButton;
 
 
-	public MyPanel(Bombs bombs) {   //This is the constructor... this code runs first to initialize
-
-		this.bombs = bombs;
-		emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
-
+	public MyPanel() {   //This is the constructor... this code runs first to initialize
+		
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("INNER_CELL_SIZE must be positive!");
 		}
@@ -51,7 +49,7 @@ public class MyPanel extends JPanel {
 				colorArray[x][y] = hiddenCellColor;
 			}
 		}
-		JButton resetButton = new JButton();
+		resetButton = new JButton();
 		try {
 			Image img = ImageIO.read(getClass().getResource("img/resetButton.png")).getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH );
 			resetButton.setIcon(new ImageIcon(img));
@@ -67,6 +65,7 @@ public class MyPanel extends JPanel {
 				bombs.setBombs();
 				bombs.printBombGrid();
 				emptySquares = (TOTAL_COLUMNS * TOTAL_ROWS) - bombs.getNumberOfBombs();
+				
 				for (int i = 0; i < 9; i++) {
 					for (int j = 0; j < 9; j++) {
 						colorArray[j][i] = hiddenCellColor;
@@ -74,6 +73,7 @@ public class MyPanel extends JPanel {
 				}
 
 				repaint();
+				System.out.println(emptySquares);
 			}
 		});
 		add(resetButton);
@@ -234,8 +234,7 @@ public class MyPanel extends JPanel {
 
 	public void checkIfWon() {
 		System.out.println(emptySquares);
-		if (emptySquares == bombs.getNumberOfBombs()) {
-			flags.hideAllFlags();
+		if (emptySquares == 0) {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					if (bombs.getRevealedCell()[j][i] == false) {
@@ -249,7 +248,6 @@ public class MyPanel extends JPanel {
 
 	public void checkIfGameOver() {
 		if (bombs.getBombGrid()[mouseDownGridX][mouseDownGridY] == "b") {
-			flags.hideAllFlags();
 			emptySquares = -1;
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
