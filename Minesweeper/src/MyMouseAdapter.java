@@ -102,4 +102,3 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanel.checkIfWon();
 	}
 }
-
